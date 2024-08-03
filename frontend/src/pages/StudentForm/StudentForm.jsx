@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import NavBar from "../../components/NavBar/NavBar";
-import { AiOutlinePlus } from "react-icons/ai";
+import React, { useState, useEffect } from 'react';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 const FileUpload = ({ id, name, value, onChange }) => {
-  const [fileName, setFileName] = useState(value ? value.name : "");
+  const [fileName, setFileName] = useState(value ? value.name : '');
   const [filePreview, setFilePreview] = useState(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setFileName(file ? file.name : "");
+    setFileName(file ? file.name : '');
     setFilePreview(file ? URL.createObjectURL(file) : null);
     onChange(e);
   };
@@ -28,7 +27,7 @@ const FileUpload = ({ id, name, value, onChange }) => {
           src={filePreview}
           title={fileName}
           className="w-full h-full"
-          style={{ border: "none" }}
+          style={{ border: 'none' }}
         />
       ) : (
         <div className="flex flex-col items-center justify-center text-center">
@@ -42,27 +41,49 @@ const FileUpload = ({ id, name, value, onChange }) => {
 
 export default function StudentForm() {
   const [formData, setFormData] = useState({
-    name: "",
-    usn: "",
-    semester: "",
-    section: "",
-    aadharNumber: "",
-    address: "",
+    name: '',
+    usn: '',
+    semester: '',
+    section: '',
+    aadharNumber: '',
+    email: '',
+    address: '',
     tenthMarks: null,
     twelfthMarks: null,
+    branch: '',
   });
 
   const [sections, setSections] = useState([]);
 
   const semesterSections = {
-    1: ["A", "B", "C", "D"],
-    2: ["A", "B", "C", "D"],
-    3: ["A", "B", "C", "D", "E", "F"],
-    4: ["A", "B", "C", "D", "E", "F"],
-    5: ["A", "B", "C", "D", "E", "F"],
-    6: ["A", "B", "C", "D", "E", "F"],
-    7: ["A", "B", "C", "D", "E", "F"],
-    8: ["A", "B", "C", "D", "E", "F"],
+    1: ['A', 'B', 'C', 'D'],
+    2: ['A', 'B', 'C', 'D'],
+    3: ['A', 'B', 'C', 'D', 'E', 'F'],
+    4: ['A', 'B', 'C', 'D', 'E', 'F'],
+    5: ['A', 'B', 'C', 'D', 'E', 'F'],
+    6: ['A', 'B', 'C', 'D', 'E', 'F'],
+    7: ['A', 'B', 'C', 'D', 'E', 'F'],
+    8: ['A', 'B', 'C', 'D', 'E', 'F'],
+  };
+
+  const branchOptions = {
+    CSE: 'Computer Science and Engineering',
+    ISE: 'Information Science and Engineering',
+    ECE: 'Electronics and Communication Engineering',
+    'AI&DS': 'Artificial Intelligence and Data Science',
+    ME: 'Mechanical Engineering',
+    ASE: 'Aerospace Engineering',
+    EEE: 'Electrical and Electronics Engineering',
+    ETE: 'Electronics and Telecommunication Engineering',
+    EIE: 'Electronics and Instrumentation',
+    CVE: 'Civil Engineering',
+    'CSE-IoT': 'Computer Science and Engineering - Internet of Things and Cyber Security',
+    'AI&ML': 'Artificial Intelligence and Machine Learning',
+    MD: 'Medical Electronics',
+    IEM: 'Industrial Engineering and Management',
+    CE: 'Chemical Engineering',
+    BT: 'Bio Technology',
+    'CSE-DS':'Computer Science and Engineering - Data Science'
   };
 
   useEffect(() => {
@@ -83,188 +104,225 @@ export default function StudentForm() {
     e.preventDefault();
 
     // Validate USN
-    if (!formData.usn.startsWith("1BM")) {
+    if (!formData.usn.startsWith('1BM')) {
       alert('USN must start with "1BM"');
       return;
     }
 
     // Validate Aadhar number
     if (!/^\d+$/.test(formData.aadharNumber)) {
-      alert("Aadhar Number must contain only numbers");
+      alert('Aadhar Number must contain only numbers');
+      return;
+    }
+
+    // Validate email format
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(formData.email)) {
+      alert('Invalid email format');
       return;
     }
 
     // Validate file uploads
-    if (formData.tenthMarks && formData.tenthMarks.type !== "application/pdf") {
-      alert("10th Marks Card must be a PDF file");
+    if (formData.tenthMarks && formData.tenthMarks.type !== 'application/pdf') {
+      alert('10th Marks Card must be a PDF file');
       return;
     }
-    if (formData.twelfthMarks && formData.twelfthMarks.type !== "application/pdf") {
-      alert("12th Marks Card must be a PDF file");
+    if (formData.twelfthMarks && formData.twelfthMarks.type !== 'application/pdf') {
+      alert('12th Marks Card must be a PDF file');
       return;
     }
 
     const data = new FormData();
-    data.append("name", formData.name);
-    data.append("usn", formData.usn);
-    data.append("semester", formData.semester);
-    data.append("section", formData.section);
-    data.append("aadharNumber", formData.aadharNumber);
-    data.append("address", formData.address);
-    if (formData.tenthMarks) data.append("tenthMarks", formData.tenthMarks);
-    if (formData.twelfthMarks) data.append("twelfthMarks", formData.twelfthMarks);
+    data.append('name', formData.name);
+    data.append('usn', formData.usn);
+    data.append('semester', formData.semester);
+    data.append('section', formData.section);
+    data.append('aadharNumber', formData.aadharNumber);
+    data.append('email', formData.email);
+    data.append('address', formData.address);
+    data.append('branch', formData.branch);
+    if (formData.tenthMarks) data.append('tenthMarks', formData.tenthMarks);
+    if (formData.twelfthMarks) data.append('twelfthMarks', formData.twelfthMarks);
 
     try {
-      await fetch("http://localhost:4000/submit", {
-        method: "POST",
+      await fetch('http://localhost:4000/submit', {
+        method: 'POST',
         body: data,
       });
-      alert("Data submitted successfully");
+      alert('Data submitted successfully');
     } catch (error) {
-      console.error("Error submitting data:", error);
-      alert("Error submitting data");
+      console.error('Error submitting data:', error);
+      alert('Error submitting data');
     }
   };
 
   return (
-    <>
-      <NavBar />
-      <div className="sm:flex-row sm:items-center sm:justify-center p-8 md:px-20 lg:px-32">
-        <h2 className="text-2xl font-bold mb-4">Student Information Form</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 bg">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-gray-700 mb-2" htmlFor="name">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2" htmlFor="usn">
-                University Seat Number (USN)
-              </label>
-              <input
-                type="text"
-                id="usn"
-                name="usn"
-                value={formData.usn}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2" htmlFor="semester">
-                Semester
-              </label>
-              <select
-                id="semester"
-                name="semester"
-                value={formData.semester}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              >
-                <option value="">Select Semester</option>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-                  <option key={sem} value={sem}>
-                    {`${sem} ${sem === 1 ? "st" : sem === 2 ? "nd" : "th"} Semester`}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2" htmlFor="section">
-                Section
-              </label>
-              <select
-                id="section"
-                name="section"
-                value={formData.section}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              >
-                <option value="">Select Section</option>
-                {sections.map((section) => (
-                  <option key={section} value={section}>
-                    {section}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2" htmlFor="aadharNumber">
-                Aadhar Number
-              </label>
-              <input
-                type="text"
-                id="aadharNumber"
-                name="aadharNumber"
-                value={formData.aadharNumber}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2" htmlFor="address">
-                Address
-              </label>
-              <textarea
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                rows="4"
-                required
-              />
-            </div>
+    <div className="p-8 max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Student Information Form</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded shadow-lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="name">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
           </div>
-          <div className="space-y-4 m-auto flex-row justify-center items-center">
-            <div>
-              <label className="block text-gray-700 mb-2" htmlFor="tenthMarks">
-                10th Marks Card
-              </label>
-              <FileUpload
-                id="tenthMarks"
-                name="tenthMarks"
-                value={formData.tenthMarks}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2" htmlFor="twelfthMarks">
-                12th Marks Card
-              </label>
-              <FileUpload
-                id="twelfthMarks"
-                name="twelfthMarks"
-                value={formData.twelfthMarks}
-                onChange={handleChange}
-              />
-            </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="usn">
+              University Seat Number (USN)
+            </label>
+            <input
+              type="text"
+              id="usn"
+              name="usn"
+              value={formData.usn}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
           </div>
-          <div className="col-span-1 md:col-span-2 flex t justify-center ">
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="semester">
+              Semester
+            </label>
+            <select
+              id="semester"
+              name="semester"
+              value={formData.semester}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            >
+              <option value="">Select Semester</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                <option key={sem} value={sem}>
+                  {`${sem} ${sem === 1 ? 'st' : sem === 2 ? 'nd' : 'th'} Semester`}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="section">
+              Section
+            </label>
+            <select
+              id="section"
+              name="section"
+              value={formData.section}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            >
+              <option value="">Select Section</option>
+              {sections.map((section) => (
+                <option key={section} value={section}>
+                  {section}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="aadharNumber">
+              Aadhar Number
+            </label>
+            <input
+              type="text"
+              id="aadharNumber"
+              name="aadharNumber"
+              value={formData.aadharNumber}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="email">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="address">
+              Address
+            </label>
+            <textarea
+              id="address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            ></textarea>
+          </div>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="branch">
+              Branch
+            </label>
+            <select
+              id="branch"
+              name="branch"
+              value={formData.branch}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            >
+              <option value="">Select Branch</option>
+              {Object.entries(branchOptions).map(([code, name]) => (
+                <option key={code} value={code}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2">10th Marks Card</label>
+            <FileUpload
+              id="tenthMarks"
+              name="tenthMarks"
+              value={formData.tenthMarks}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2">12th Marks Card</label>
+            <FileUpload
+              id="twelfthMarks"
+              name="twelfthMarks"
+              value={formData.twelfthMarks}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-              style={{ width: "200px" }}
+              className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               Submit
             </button>
           </div>
-        </form>
-      </div>
-    </>
+        </div>
+      </form>
+    </div>
   );
 }

@@ -48,9 +48,15 @@ export default function StudentForm() {
     aadharNumber: '',
     email: '',
     address: '',
+    branch: '',
+    fatherName: '',
+    fatherOccupation: '',
+    fatherPhone: '',
+    motherName: '',
+    motherOccupation: '',
+    motherPhone: '',
     tenthMarks: null,
     twelfthMarks: null,
-    branch: '',
   });
 
   const [sections, setSections] = useState([]);
@@ -141,6 +147,12 @@ export default function StudentForm() {
     data.append('email', formData.email);
     data.append('address', formData.address);
     data.append('branch', formData.branch);
+    data.append('fatherName', formData.fatherName);
+    data.append('fatherOccupation', formData.fatherOccupation);
+    data.append('fatherPhone', formData.fatherPhone);
+    data.append('motherName', formData.motherName);
+    data.append('motherOccupation', formData.motherOccupation);
+    data.append('motherPhone', formData.motherPhone);
     if (formData.tenthMarks) data.append('tenthMarks', formData.tenthMarks);
     if (formData.twelfthMarks) data.append('twelfthMarks', formData.twelfthMarks);
 
@@ -273,6 +285,98 @@ export default function StudentForm() {
               required
             ></textarea>
           </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="fatherName">
+              Father's Name
+            </label>
+            <input
+              type="text"
+              id="fatherName"
+              name="fatherName"
+              value={formData.fatherName}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="fatherOccupation">
+              Father's Occupation
+            </label>
+            <input
+              type="text"
+              id="fatherOccupation"
+              name="fatherOccupation"
+              value={formData.fatherOccupation}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="fatherPhone">
+              Father's Phone Number
+            </label>
+            <input
+              type="text"
+              id="fatherPhone"
+              name="fatherPhone"
+              value={formData.fatherPhone}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="motherName">
+              Mother's Name
+            </label>
+            <input
+              type="text"
+              id="motherName"
+              name="motherName"
+              value={formData.motherName}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="motherOccupation">
+              Mother's Occupation
+            </label>
+            <input
+              type="text"
+              id="motherOccupation"
+              name="motherOccupation"
+              value={formData.motherOccupation}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2" htmlFor="motherPhone">
+              Mother's Phone Number
+            </label>
+            <input
+              type="text"
+              id="motherPhone"
+              name="motherPhone"
+              value={formData.motherPhone}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Submit
+            </button>
+          </div>
         </div>
         <div className="space-y-4">
           <div>
@@ -312,14 +416,6 @@ export default function StudentForm() {
               value={formData.twelfthMarks}
               onChange={handleChange}
             />
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Submit
-            </button>
           </div>
         </div>
       </form>

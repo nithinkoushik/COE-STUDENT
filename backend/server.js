@@ -4,6 +4,7 @@ import pkg from 'pg';
 import cors from 'cors';
 
 const { Pool } = pkg;
+
 // Initialize Express
 const app = express();
 app.use(express.json());
@@ -25,16 +26,28 @@ const upload = multer({ storage: storage });
 
 // Endpoint to handle form submissions
 app.post('/submit', upload.fields([{ name: 'tenthMarks' }, { name: 'twelfthMarks' }]), async (req, res) => {
-  const { name, usn, semester, section, aadharNumber, email, address, branch } = req.body;
+  const { 
+    name, usn, semester, section, aadharNumber, email, address, branch,
+    fatherName, fatherOccupation, fatherPhone,
+    motherName, motherOccupation, motherPhone 
+  } = req.body;
+  console.log(req.body);
+  
   const tenthMarks = req.files['tenthMarks'] ? req.files['tenthMarks'][0].buffer : null;
   const twelfthMarks = req.files['twelfthMarks'] ? req.files['twelfthMarks'][0].buffer : null;
 
   try {
     const query = `
-      INSERT INTO Student (Name, USN, Aadhar_Number, Semester, Section, Branch, Email, Tenth_Markscard, Twelfth_Markscard, Address)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      INSERT INTO Student (Name, USN, Aadhar_Number, Semester, Section, Branch, Email, Tenth_Markscard, Twelfth_Markscard, Address,
+      Fathers_Name, Fathers_Occupation, Fathers_Phone_Number, Mothers_Name, Mothers_Occupation, Mothers_Phone_Number)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
     `;
-    const values = [name, usn, aadharNumber, semester, section, branch, email, tenthMarks, twelfthMarks, address];
+    const values = [
+      name, usn, aadharNumber, semester, section, branch, email, tenthMarks, twelfthMarks, address,
+      fatherName, fatherOccupation, fatherPhone,
+      motherName, motherOccupation, motherPhone
+    ];
+    console.log(values);
 
     await pool.query(query, values);
 
@@ -84,6 +97,7 @@ app.get('/students', async (req, res) => {
 // Endpoint to serve PDF files
 app.get('/pdf/:id/:type', async (req, res) => {
   const { id, type } = req.params;
+ 
   const column = type === 'tenth' ? 'tenth_markscard' : 'twelfth_markscard';
 
   try {
@@ -102,7 +116,6 @@ app.get('/pdf/:id/:type', async (req, res) => {
     res.status(500).send('Error fetching PDF');
   }
 });
-
 
 // Start server
 const PORT = 4000;

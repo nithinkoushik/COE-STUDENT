@@ -46,6 +46,12 @@ function StudentTable({ filteredData }) {
               <th className="py-2 px-4 border-b">Aadhar Number</th>
               <th className="py-2 px-4 border-b">Address</th>
               <th className="py-2 px-4 border-b">Email</th>
+              <th className="py-2 px-4 border-b">Father's Name</th>
+              <th className="py-2 px-4 border-b">Father's Occupation</th>
+              <th className="py-2 px-4 border-b">Father's Phone Number</th>
+              <th className="py-2 px-4 border-b">Mother's Name</th>
+              <th className="py-2 px-4 border-b">Mother's Occupation</th>
+              <th className="py-2 px-4 border-b">Mother's Phone Number</th>
               <th className="py-2 px-4 border-b">10th Marks</th>
               <th className="py-2 px-4 border-b">12th Marks</th>
             </tr>
@@ -66,6 +72,12 @@ function StudentTable({ filteredData }) {
                   <td className="py-2 px-4 border-b">{student.aadhar_number}</td>
                   <td className="py-2 px-4 border-b">{student.address}</td>
                   <td className="py-2 px-4 border-b">{student.email}</td>
+                  <td className="py-2 px-4 border-b">{student.fathers_name}</td>
+                  <td className="py-2 px-4 border-b">{student.fathers_occupation}</td>
+                  <td className="py-2 px-4 border-b">{student.fathers_phone_number}</td>
+                  <td className="py-2 px-4 border-b">{student.mothers_name}</td>
+                  <td className="py-2 px-4 border-b">{student.mothers_occupation}</td>
+                  <td className="py-2 px-4 border-b">{student.mothers_phone_number}</td>
                   <td className="py-2 px-4 border-b">
                     <a
                       href={`http://localhost:4000/pdf/${student.id}/tenth`}
